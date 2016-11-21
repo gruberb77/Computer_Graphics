@@ -2,13 +2,13 @@
  "folders":
  [
  {
- "path": "/home/brent/Graphics/Computer_Graphics/Final"
+ "path": "/home/brent/Github/Computer_Graphics/Final"
  }
  ],
  "settings":
  {
  "sublimegdb_commandline": "make",
  "sublimegdb_commandline": "gdb -nx -readnow -fullname --interpreter=mi -args ./house",
- "sublimegdb_workingdir": "/home/brent/Graphics/Computer_Graphics/Final"
+ "sublimegdb_workingdir": "/home/brent/Github/Computer_Graphics/Final"
  }
 }

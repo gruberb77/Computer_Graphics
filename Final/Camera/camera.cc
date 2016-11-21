@@ -328,6 +328,12 @@ vec4 Camera::Get_Eye()
 	return eye;
 }
 
+void Camera::Set_Eye(vec4 location)
+{
+	eye = location;
+	thirdp = false;
+}
+
 //******************************************************************
 //                                                                  
 //  Function:   Get_At

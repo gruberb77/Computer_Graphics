@@ -30,8 +30,8 @@ include ../Makefile.txt
 all: house clean
 
 #make the program
-house: house.cc cube.o room.o camera.o bitmap.o skybox.o
-	$(CC) house.cc  $(InitShader) cube.o room.o camera.o bitmap.o skybox.o $(OPTIONS) $(LDLIBS) -o house
+house: house.cc cube.o room.o camera.o bitmap.o skybox.o player.o sword.o
+	$(CC) house.cc  $(InitShader) cube.o room.o camera.o bitmap.o skybox.o player.o sword.o $(OPTIONS) $(LDLIBS) -o house
 
 # Auxilliary file for rooms.
 room.o: ./Room/room.h ./Room/room.cc cube.o
@@ -51,6 +51,12 @@ bitmap.o: ./Bitmap/bitmap.h ./Bitmap/bitmap.cc
 
 skybox.o: ./Skybox/skybox.h ./Skybox/skybox.cc
 	$(CC) ./Skybox/skybox.cc -c $(OPTIONS)
+
+player.o: ./Characters/player.h ./Characters/player.cc
+	$(CC) ./Characters/player.cc -c $(OPTIONS)
+
+sword.o: ./Characters/sword.h ./Characters/sword.cc
+	$(CC) ./Characters/sword.cc -c $(OPTIONS)
 
 
 # pattern to clean the directory

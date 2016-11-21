@@ -33,10 +33,10 @@ public:
 	Skybox();
 
 	//second constructor
-	Skybox(GLuint nindex, point4 *npoints, vec3 *nnormals, GLint nmvLoc);
+	Skybox(GLuint nindex, point4 *npoints, vec2 *ntexcoords, GLint nmvLoc);
 
 	//third Constructor
-	Skybox(GLuint nindex, point4 *npoints, vec3 *nnormals, GLint nmvLoc, GLint colLoc, GLuint *ntextures);
+	Skybox(GLuint nindex, point4 *npoints, vec2 *ntexcoords, GLint nmvLoc, GLint colLoc, GLuint *ntextures);
 
 	// Constructor
 	Skybox(Skybox *nSkybox);
@@ -53,6 +53,9 @@ public:
 	// Create the Skybox
 	void colorSkybox();
 
+	// set the position, not dependent on previous position
+	void set_pos(vec3 t_vec);
+	
 	// create a face of the Skybox
 	void MyQuad(int a, int b, int c, int d);
 
@@ -122,7 +125,7 @@ private:
 	vec4 *points;
 
 	// pointer to normals array
-	vec3 *normals;
+	vec2 *tex_coords;
 
 	//used for any motion
 	GLint last_time;

@@ -55,6 +55,7 @@ class Camera{
 
 		//return the eye
 		vec4 Get_Eye();
+		void Set_Eye(vec4 location);
 
 		//return at
 		vec4 Get_At();

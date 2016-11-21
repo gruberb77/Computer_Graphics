@@ -18,6 +18,7 @@
 #include "./Camera/camera.h"
 #include "./Bitmap/bitmap.h"
 #include "./Skybox/skybox.h"
+#include "./Characters/player.h"
 #include <vector>
 #include <time.h>
 #include <string>
@@ -32,8 +33,8 @@ using std::ofstream;
 
   const int NumVertices = 36;
 
-  #define NUM_TEXTURES 2
-  #define TOT_TEXTURES 4
+  #define NUM_TEXTURES 7
+  #define TOT_TEXTURES 7
   BITMAPINFO *TexInfo[NUM_TEXTURES]; //texture bitmatp information
   GLubyte	 *TexBits[NUM_TEXTURES];
 
@@ -54,7 +55,7 @@ using std::ofstream;
   color4 colors[36];
   GLuint textures[TOT_TEXTURES];
 
-  vec2 *tex_coords;
+  vec2 tex_coords[NumVertices];
   float *z_vals;
 
   const int TextureSize = 64;
@@ -73,7 +74,7 @@ using std::ofstream;
   //list of rooms
   vector<Room> rooms;
   //list of ghosts
-  vector<Cube> ghosts;
+  vector<Player> ghosts;
 
   // Adjust this value for your taste (to speed up, make bigger, to slow
   // down rotation, make smaller
@@ -93,11 +94,11 @@ using std::ofstream;
   //perspective values
   GLfloat  fovy = 45.0;
   GLfloat  aspect;
-  GLfloat  zNear = 0.5, zFar = 3.0;
+  GLfloat  zNear = 0.5, zFar = 25.0;
 
   //pointers for objects used
   Cube	   *myCube;
-  Cube     *myPlayer;
+  Player   *myPlayer;
   Skybox   *skyBox;
   Room	   *myRoom;
   Camera   *myCamera;
@@ -106,81 +107,61 @@ using std::ofstream;
   //list<Room>::iterator current_room;
   int current;
 
-
-void set_textures()
+void load_texture(int index, string filename)
 {
-    for (int i=0; i<64; i++) {
-    for (int j=0; j<64; j++) {
-      GLubyte c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0)) * 255;
-      image[i][j][0]  = c;
-      image[i][j][1]  = c;
-      image[i][j][2]  = c;
-      image2[i][j][0] = c;
-      image2[i][j][1] = 0;
-      image2[i][j][2] = c;
-    }
-  }
-
-  glGenTextures(4, textures);
-  glBindTexture(GL_TEXTURE_2D, textures[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, TextureSize, TextureSize, 0,
-         GL_RGB, GL_UNSIGNED_BYTE, image);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-  glBindTexture(GL_TEXTURE_2D, textures[1]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, TextureSize, TextureSize, 0,
-         GL_RGB, GL_UNSIGNED_BYTE, image2);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
   // Set which texture subsequent commands will apply to.
-  glBindTexture(GL_TEXTURE_2D, textures[2]);
+  glBindTexture(GL_TEXTURE_2D, textures[index]);
   // Read the image file.
-  TexBits[0] = LoadDIBitmap("./textures/stonewall.bmp", &TexInfo[0]);
+  TexBits[index] = LoadDIBitmap(filename.c_str(), &TexInfo[index]);
   // Check for failure (null pointer returned).
-  if (TexBits[0] == 0) {
-    std::cout << "Error reading in texture file. Filename =" << "AthensMedium.bmp" << std::endl;
+  if (TexBits[index] == 0) {
+    std::cout << "Error reading in texture file. Filename =" << filename << std::endl;
     exit(EXIT_FAILURE);
   }
   // Send the texture image to the graphics card.
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, TexInfo[0]->bmiHeader.biWidth,
-         TexInfo[0]->bmiHeader.biHeight, 0, GL_RGB,
-         GL_UNSIGNED_BYTE, TexBits[0]);
+  glTexImage2D(GL_TEXTURE_2D, 0, 3, TexInfo[index]->bmiHeader.biWidth,
+         TexInfo[index]->bmiHeader.biHeight, 0, GL_RGB,
+         GL_UNSIGNED_BYTE, TexBits[index]);
   // Set up texture parameters
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  // Set which texture subsequent commands will apply to.
-  glBindTexture(GL_TEXTURE_2D, textures[3]);
-  // Read the image file.
-  TexBits[1] = LoadDIBitmap("./textures/Me.bmp", &TexInfo[1]);
-  // Check for failure (null pointer returned).
-  if (TexBits[1] == 0) {
-    std::cout << "Error reading in texture file. Filename =" << "Me.bmp" << std::endl;
-    exit(EXIT_FAILURE);
+
+}
+
+
+void set_textures()
+{
+  string folder = "./textures/skycube_tga/";
+  string files[TOT_TEXTURES] = {"sky1.bmp", "sky2.bmp", "sky3.bmp", "sky4.bmp", "sky5.bmp", "sky6.bmp", "horizon.bmp"};
+
+  glGenTextures(6, textures);
+
+  for(int i=0; i<TOT_TEXTURES; i++)
+  {
+    load_texture(i, folder+files[i]);
   }
-  // Send the texture image to the graphics card.
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, TexInfo[1]->bmiHeader.biWidth,
-         TexInfo[1]->bmiHeader.biHeight, 0, GL_RGB,
-         GL_UNSIGNED_BYTE, TexBits[1]);
-  // Set up texture parameters
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textures[0]);
+}
+
+void create_player()
+{
+    //move player to the position of the eye
+  vec4 eye = vec4(0.0, 0.5, 3.0, 1.0);
+  myCamera->Set_Eye(eye);
+  myPlayer = new Player(myCube, 1);
+  myPlayer->transform(vec3(0.0 , 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
+  myPlayer->move_player(vec3(eye.x, 0.25, eye.z+0.25));
+  myPlayer->color(0.0, 1.0, 0.0);
+  skyBox->set_pos(vec3(0.0, 7.5, 0.0));
 }
 
 
@@ -210,10 +191,16 @@ void make_ghosts(Cube *myCube, vec3 offset)
     float random1 = (2.0/(rand()%20))-1;
     float random2 = (2.0/(rand()%20))-1;
 
-    Cube *ghost = new Cube((*myCube));
-    ghost->transform(vec3(random1, 0.25, random2 + offset.z), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
-    (*ghost).color(1.0, 1.0, 1.0);
-    ghosts.push_back(ghost);
+    int level = (rand() % 3) + 1;
+    Player *player = new Player(myCube, level);
+    player->transform(vec3(random1, 0.25, random2 + offset.z), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
+    if(level == 1)
+      player->color(1.0, 0.0, 0.0);
+    else if(level == 2)
+      player->color(0.0, 1.0, 0.0);
+    else if(level == 3)
+      player->color(0.0, 0.0, 1.0);
+    ghosts.push_back(*player);
   }
 }
 
@@ -349,33 +336,31 @@ void open_doors()
 void move(vec3 location, vec3 movement)
 {
   //list<Room>::iterator next = current_room;
-  int next = current;
 
-  //if not the last room get index for next room
-  if(next < 5)  
-    ++next;
 
   //check for collisions before moving
-  if(!rooms[current].collision(location, movement) && !rooms[next].collision(location, movement))
-  {
-    myPlayer->trans(movement);
+
+    myPlayer->move_player(movement);
     skyBox->trans(movement);
     myCamera->Move_Eye(movement);
     myCamera->Move_At(movement);
-  }
 
-  //check if the next or previous rooms have been entered
-  bool entered_next = rooms[next].Enter_Door(location, movement);
-  bool entered_prev = rooms[current].Enter_Door(location, movement);
 
-  if(entered_prev)
-  {
-    --current;
-  }
-  else if(entered_next)
-  {
-    ++current;
-  }
+    for(vector<Player>::iterator it = ghosts.begin(); it != ghosts.end(); ++it)
+    {
+      if((*it).Check_Collision(location, movement))
+      {
+        bool alive = myPlayer->take_damage(20);
+        cout << "Health = " << myPlayer->get_health() << endl;
+        if(!alive)
+        {
+          delete myPlayer;
+          create_player();
+        }
+      }
+    }
+  
+
 }
 
 //******************************************************************
@@ -436,6 +421,8 @@ void spin_fan()
   }
 }
 
+
+
 //******************************************************************
 //                                                                  
 //  Function:   init
@@ -452,6 +439,7 @@ void spin_fan()
 //******************************************************************
 void init()
 {
+
   set_textures();
 
   // Load shaders and use the resulting shader program
@@ -466,7 +454,13 @@ void init()
   vColor = glGetUniformLocation(program, "vColor"); 
   GLuint vTexCoord = glGetAttribLocation(program, "vTexCoord");
 
+  //create the camera
+  myCamera = new Camera(CameraView);
   myCube = new Cube(0, points, normals, ModelView, vColor);
+  skyBox= new Skybox(0, points, tex_coords, ModelView, vColor, textures);
+  skyBox->transform(vec3(0.0, 7.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(15.0, 15.0, 15.0));
+
+  create_player();
 
   // Create a vertex array object
   GLuint vao;
@@ -477,11 +471,11 @@ void init()
   GLuint buffer;
   glGenBuffers(1, &buffer);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(points) + sizeof(normals),
+  glBufferData(GL_ARRAY_BUFFER, sizeof(points) + sizeof(tex_coords),
 	       NULL, GL_STATIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);
   glBufferSubData(GL_ARRAY_BUFFER, sizeof(points),
-		  sizeof(normals), normals);
+		  sizeof(tex_coords), tex_coords);
 
   // set up vertex arrays
   glEnableVertexAttribArray(vPosition);
@@ -490,7 +484,7 @@ void init()
 
   glEnableVertexAttribArray(vTexCoord);
   glVertexAttribPointer(vTexCoord, 2, GL_FLOAT, GL_FALSE, 0,
-			BUFFER_OFFSET(sizeof(vec4)*NumVertices));
+			BUFFER_OFFSET(sizeof(points)));
 
   glEnable(GL_DEPTH_TEST);
   glClearColor(1.0, 1.0, 1.0, 1.0); 
@@ -501,20 +495,11 @@ void init()
 
   glUniformMatrix4fv(Projection, 1, GL_TRUE, projection);
 
-  //create the camera
-  myCamera = new Camera(CameraView);
-
   //create the rooms
-  create_rooms();
-
-  //move player to the position of the eye
-  vec4 eye = myCamera->Get_Eye();
-  myPlayer = new Cube((*myCube));
-  myPlayer->transform(vec3(eye.x , 0.25, eye.z+0.15), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
-  myPlayer->color(1.0, 1.0, 1.0);
+  //create_rooms();
 
   //make the ghosts
-  make_ghosts(myCube, rooms[3].Get_Offset());
+  make_ghosts(myCube, vec3(0.0, 0.0, 0.0));
 
   myCube->Identity();
 
@@ -524,9 +509,6 @@ void init()
 
   myFan->blade2 = new Cube(*myCube);
   myFan->blade2->transform(vec3(0.0, 1.9, -2.0), vec3(0.0, 0.0, 0.0), vec3(0.5, 0.1, 0.1));
-
-  skyBox= new Skybox(0, points, normals, ModelView, vColor, textures);
-  skyBox->transform(vec3(0.0, 5.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(10.0, 10.0, 10.0));
 }
 
 //******************************************************************
@@ -546,36 +528,44 @@ void init()
 extern "C" void display()
 {
   glUniform1i(glGetUniformLocation(program, "text"), 1);
-
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
   //move camera
   myCamera->Update_Camera();
 
   skyBox->draw();
 
-  //draw rooms
-  for (int i=0; i<numrooms; i++)
-  {
-	   rooms[i].draw();
-  }
-
   glUniform1i(glGetUniformLocation(program, "text"), 0);
   
+
   //draw ghosts
-  for (int i=0; i<numghosts; i++)
+  for (vector<Player>::iterator it=ghosts.begin(); it != ghosts.end(); it++)
   {
-    ghosts[i].color(1.0, 1.0, 1.0);
-    ghosts[i].draw();
+    (*it).draw();
   }
 
   myFan->blade1->draw();
   myFan->blade2->draw();
 
   //draw player
-  myPlayer->color(0.0, 0.0, 0.0);
-  myPlayer->draw();
+  myPlayer->color(0.0, 0.5, 0.5);
+  myPlayer->pdraw();
   glutSwapBuffers();
+}
+
+
+void attack()
+{
+  myPlayer->swing_sword();
+  vec3 location = myPlayer->get_location();
+  vec4 movement = myCamera->Get_At();
+  for (vector<Player>::iterator it=ghosts.begin(); it != ghosts.end(); it++)
+  {
+    if((*it).Check_Collision(location, vec3(movement.x, movement.y, movement.z)))
+    {
+      bool alive = (*it).take_damage(500);
+      cout << "hit, health = " << (*it).get_health() << endl;
+    }
+  }
 }
 
 //******************************************************************
@@ -598,8 +588,7 @@ extern "C" void mouse(int button, int state, int x, int y)
     switch(button) {
     case GLUT_LEFT_BUTTON:  
       //open door in front of player
-			open_doors();  
-      interact();
+      attack();
 			break;
     case GLUT_MIDDLE_BUTTON:  
 			break;
@@ -634,8 +623,21 @@ extern "C" void idle()
   lasttime = new_time;
 
   //move the ghosts constantly
-  move_ghosts();
+  //move_ghosts();
   spin_fan();
+
+  for(vector<Player>::iterator it = ghosts.begin(); it != ghosts.end(); ++it)
+  {
+    if((*it).get_health() <= 0)
+    {
+      ghosts.erase(it);
+    }
+  }
+
+  if(ghosts.empty())
+  {
+    make_ghosts(myCube, vec3(0.0, 0.0, 0.0));
+  }
 
   glutPostRedisplay();
 }
@@ -658,7 +660,7 @@ extern "C" void idle()
 extern "C" void keyboard(unsigned char key, int x, int y)
 {
   //distance to move
-  GLfloat dist = 0.2;
+  GLfloat dist = 0.1;
 
   //movement vector
   vec3 movement = vec3(0.0, 0.0, 0.0);
@@ -769,7 +771,7 @@ extern "C" void passivemotion(int x, int y)
 {
 
   //angle to rotate by
-  GLfloat angle = 180.0;
+  GLfloat angle = 360.0;
   //middle of screen
   float midx = winw/2.0;
   float midy = winh/2.0;
@@ -783,6 +785,7 @@ extern "C" void passivemotion(int x, int y)
 
   //update the at vector
   myCamera->Move_At(theta, phi);
+  myPlayer->rotate_player(angle * dx);
 
   glutPostRedisplay();
 }

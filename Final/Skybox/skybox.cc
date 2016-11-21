@@ -77,25 +77,24 @@ void Skybox::MyQuad(int a, int b, int c, int d)
       vert[c]  - vert[a]);
   vec3 normal = vec3(normal3[0], normal3[1], normal3[2]);
 
-  //build face of Skybox
+  //build face of cube
 
-   normals[counter] = normal; 
+   tex_coords[counter] = vec2(0.0, 1.0); 
    points[counter] = vert[a]; counter++;
-   normals[counter] = normal; 
+   tex_coords[counter] = vec2(0.0, 0.0); 
    points[counter] = vert[b]; counter++;
-   normals[counter] = normal; 
+   tex_coords[counter] = vec2(1.0, 0.0); 
    points[counter] = vert[c]; counter++;
 
    normal3 = cross(vert[d] - vert[a],
       vert[c] - vert[a]);
    normal = vec3(normal3[0], normal3[1], normal3[2]);
 
-
-   normals[counter] = normal; 
+   tex_coords[counter] = vec2(0.0, 1.0); 
    points[counter] = vert[a]; counter++;
-   normals[counter] = normal; 
+   tex_coords[counter] = vec2(1.0, 0.0); 
    points[counter] = vert[c]; counter++;
-   normals[counter] = normal; 
+   tex_coords[counter] = vec2(1.0, 1.0); 
    points[counter] = vert[d]; counter++;
 }
 
@@ -118,11 +117,17 @@ void Skybox::MyQuad(int a, int b, int c, int d)
 void Skybox::colorSkybox()
 {
   //build each face of Skybox
+  //back
   MyQuad(1, 0, 3, 2);
+  //right
   MyQuad(2, 3, 7, 6);
+  //bottom
   MyQuad(3, 0, 4, 7);
+  //top
   MyQuad(6, 5, 1, 2);
-  MyQuad(4, 5, 6, 7);
+  //front
+  MyQuad(5, 4, 7, 6);
+  //left
   MyQuad(5, 4, 0, 1);
 }
 
@@ -164,12 +169,12 @@ Skybox::Skybox()
 // Post Conditions: Skybox instance created with given inputs
 //                                                                  
 //******************************************************************
-Skybox::Skybox(GLuint nindex, point4 *npoints, vec3 *nnormals, GLint nmvLoc)
+Skybox::Skybox(GLuint nindex, point4 *npoints, vec2 *ntexcoords, GLint nmvLoc)
 {
   index = nindex;
   counter = nindex;
   points = npoints;
-  normals = nnormals;
+  tex_coords = ntexcoords;
   model_view = Scale(1.0, 1.0, 1.0);
   mvLoc = nmvLoc;
   texture = false;
@@ -191,12 +196,12 @@ Skybox::Skybox(GLuint nindex, point4 *npoints, vec3 *nnormals, GLint nmvLoc)
 // Post Conditions: Skybox instance created with given inputs
 //                                                                  
 //******************************************************************
-Skybox::Skybox(GLuint nindex, point4 *npoints, vec3 *nnormals, GLint nmvLoc, GLint ncolLoc, GLuint *ntextures)
+Skybox::Skybox(GLuint nindex, point4 *npoints, vec2 *ntexcoords, GLint nmvLoc, GLint ncolLoc, GLuint *ntextures)
 {
   index = nindex;
   counter = nindex;
   points = npoints;
-  normals = nnormals;
+  tex_coords = ntexcoords;
   model_view = Scale(1.0, 1.0, 1.0);
   clr = vec4(1.0, 1.0, 1.0, 1.0);
   mvLoc = nmvLoc;
@@ -255,24 +260,39 @@ void Skybox::draw()
 	glUniform4f(colLoc, clr.x, clr.y, clr.z, clr.w);
     glUniformMatrix4fv(mvLoc, 1, GL_TRUE, model_view);
 
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    //behind
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
+
+    //right
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
+
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
 
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    //below
+    glBindTexture(GL_TEXTURE_2D, textures[5]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
-    glDrawArrays(GL_TRIANGLES, index, facePoints);
-    index+=6;
 
+    //top
     glBindTexture(GL_TEXTURE_2D, textures[2]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
+
+    //front
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
+
+    glDrawArrays(GL_TRIANGLES, index, facePoints);
+    index+=6;
+
+    //left
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
+
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index=0;
 }
@@ -430,6 +450,14 @@ void Skybox::Identity()
 	trans_vec = (0.0, 0.0, 0.0);
 	rot_vec = (0.0, 0.0, 0.0);
 	scl_vec = (0.0, 0.0, 0.0);
+}
+
+
+
+void Skybox::set_pos(vec3 t_vec)
+{
+  trans_vec = t_vec;
+  update_mv();
 }
 
 //******************************************************************

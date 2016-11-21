@@ -324,6 +324,14 @@ void Cube::rot(vec3 new_vec)
 	model_view = temp * temp2; 
 }
 
+
+void Cube::set_rot(vec3 new_vec)
+{
+  rot_vec = new_vec;
+  std::cout << "rotation = " << rot_vec << std::endl;
+  update_mv();
+}
+
 //******************************************************************
 //                                                                  
 //  Function:   scl
@@ -385,6 +393,14 @@ void Cube::transform(vec3 t_vec, vec3 r_vec, vec3 s_vec)
 	rot_vec += r_vec;
 	scl_vec = s_vec;
 	update_mv();
+}
+
+
+
+void Cube::set_pos(vec3 t_vec)
+{
+  trans_vec = t_vec;
+  update_mv();
 }
 
 //******************************************************************

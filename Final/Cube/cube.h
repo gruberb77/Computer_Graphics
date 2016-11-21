@@ -62,11 +62,16 @@ public:
 	// Rotate in degrees
 	void rot(vec3 rot_vec);
 
+	void set_rot(vec3 new_vec);
+
 	// scale the cube
 	void scl(vec3 scale_vec);
 
 	// pass in all transformations at one time
 	void transform(vec3 tran_vec, vec3 rot_vec, vec3 scale_vec);
+
+	// set the position, not dependent on previous position
+	void set_pos(vec3 t_vec);
 
 	// set model view to identity matrix
 	void Identity();
