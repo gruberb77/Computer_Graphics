@@ -2,7 +2,7 @@
 
 #include "player.h"
 
-const vec3 swordoff = vec3(0.075, 0.2, -0.25);
+const vec3 swordoff = vec3(0.075, 0.1, -0.25);
 
 
 Player::Player() : Cube()

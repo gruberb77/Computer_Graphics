@@ -261,37 +261,37 @@ void Skybox::draw()
     glUniformMatrix4fv(mvLoc, 1, GL_TRUE, model_view);
 
     //behind
-    glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
 
     //right
-    glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glBindTexture(GL_TEXTURE_2D, textures[4]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
 
     //below
-    glBindTexture(GL_TEXTURE_2D, textures[5]);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
 
     //top
-    glBindTexture(GL_TEXTURE_2D, textures[2]);
+    glBindTexture(GL_TEXTURE_2D, textures[5]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
 
     //front
-    glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glBindTexture(GL_TEXTURE_2D, textures[2]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index+=6;
 
     //left
-    glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glBindTexture(GL_TEXTURE_2D, textures[3]);
 
     glDrawArrays(GL_TRIANGLES, index, facePoints);
     index=0;

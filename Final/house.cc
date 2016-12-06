@@ -124,7 +124,7 @@ void load_texture(int index, string filename)
     exit(EXIT_FAILURE);
   }
   // Send the texture image to the graphics card.
-  glTexImage2D(GL_TEXTURE_2D, 0, 3, TexInfo[index]->bmiHeader.biWidth,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TexInfo[index]->bmiHeader.biWidth,
          TexInfo[index]->bmiHeader.biHeight, 0, GL_RGB,
          GL_UNSIGNED_BYTE, TexBits[index]);
   // Set up texture parameters
@@ -140,7 +140,7 @@ void load_texture(int index, string filename)
 void set_textures()
 {
   string folder = "./textures/skycube_tga/";
-  string files[TOT_TEXTURES] = {"sky1.bmp", "sky2.bmp", "sky3.bmp", "sky4.bmp", "sky5.bmp", "sky6.bmp", "horizon.bmp"};
+  string files[TOT_TEXTURES] = {"Daylight Box_Back.bmp", "Daylight Box_Bottom.bmp", "Daylight Box_Front.bmp", "Daylight Box_Left.bmp", "Daylight Box_Right.bmp", "Daylight Box_Top.bmp", "horizon.bmp"};
 
   glGenTextures(6, textures);
 
@@ -240,7 +240,7 @@ void move_enemies()
 {
   //used for hack of collision detection
   vec3 ploc = myPlayer->get_location();
-  GLfloat dist = 0.005;
+  GLfloat dist = 0.0025;
 
   //move every ghost
   for(list<Player>::iterator it=enemies.begin(); it != enemies.end(); it++)
@@ -249,21 +249,40 @@ void move_enemies()
     vec3 location = (*it).get_location();
     bool coll = false;
 
-    if(location.x < ploc.x)
+    dist = 0.0025*(*it).get_lev();
+
+    if((ploc.x - location.x) < 0.25 && (ploc.x - location.z) < 0.25)
+    {
+
+    if(location.x <= ploc.x)
     {
       movement.x = dist;
     }
-    else if(location.x > ploc.x)
+    else if(location.x >= ploc.x)
     {
       movement.x = -dist;
     }
-    if(location.z < ploc.z)
+    if(location.z <= ploc.z)
     {
       movement.z = dist;
     }
-    else if(location.z > ploc.z)
+    else if(location.z >= ploc.z)
     {
       movement.z = -dist;
+    }
+
+      if(myPlayer->Check_Collision(location, movement))
+      {
+        bool alive = myPlayer->take_damage(20);
+        cout << "Health = " << myPlayer->get_health() << endl;
+        if(!alive)
+        {
+          delete myPlayer;
+          create_player();
+        }
+
+        movement *= -250;
+      }
     }
 
     (*it).trans(movement);
@@ -376,23 +395,6 @@ void move(vec3 location, vec3 movement)
     myCamera->Move_Eye(movement);
     myCamera->Move_At(movement);
 
-
-    for(list<Player>::iterator it = enemies.begin(); it != enemies.end(); ++it)
-    {
-
-      if((*it).Check_Collision(location, movement))
-      {
-        bool alive = myPlayer->take_damage(20);
-        cout << "Health = " << myPlayer->get_health() << endl;
-        if(!alive)
-        {
-          delete myPlayer;
-          create_player();
-        }
-      }
-    }
-  
-
 }
 
 //******************************************************************
@@ -418,35 +420,6 @@ void interact()
     myFan->blade2->Check_Collision(vec3(player.x, player.y, player.z), vec3(sight.x*5, sight.y*5, sight.z*5)))
   {
     myFan->spin = !myFan->spin;
-  }
-}
-
-//******************************************************************
-//                                                                  
-//  Function:   spin_fan
-//                                                                  
-//  Purpose:    spin a ceiling fan                              
-//                                                                  
-//  Parameters: 
-//                                                                  
-//
-// Pre Conditions: 
-//
-// Post Conditions: if a ceiling fan is set to spin, it will spin
-//                                                                  
-//******************************************************************
-void spin_fan()
-{
-  GLfloat angle = 10.0;
-
-  if(myFan->spin)
-  {
-    myFan->blade1->trans(vec3(0.0, 0.0, 2.0));
-    myFan->blade1->rot(vec3(0.0, angle, 0.0));
-    myFan->blade1->trans(vec3(0.0, 0.0, -2.0));
-    myFan->blade2->trans(vec3(0.0, 0.0, 2.0));
-    myFan->blade2->rot(vec3(0.0, angle, 0.0));
-    myFan->blade2->trans(vec3(0.0, 0.0, -2.0));
   }
 }
 
@@ -623,8 +596,6 @@ void attack()
   list<Player>::iterator it=enemies.begin();
   while(it != enemies.end())
   {
-    sword_collision((*it));
-
     bool alive = true;
     if((*it).Check_Collision(location, vec3(movement.x, movement.y, movement.z)))
     {
