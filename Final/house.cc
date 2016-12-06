@@ -23,6 +23,7 @@
 #include <time.h>
 #include <string>
 #include <fstream>
+#include <list>
 
 using std::cout;
 using std::endl;
@@ -30,13 +31,17 @@ using std::vector;
 using std::string;
 using std::ifstream;
 using std::ofstream;
+using std::list;
 
   const int NumVertices = 36;
 
   #define NUM_TEXTURES 7
   #define TOT_TEXTURES 7
+  #define M_PI  3.14159265358979323846
+  #define SPEED 0.25
   BITMAPINFO *TexInfo[NUM_TEXTURES]; //texture bitmatp information
   GLubyte	 *TexBits[NUM_TEXTURES];
+
 
   typedef Angel::vec4  color4;
   typedef Angel::vec4  point4;
@@ -68,13 +73,13 @@ using std::ofstream;
 
   //number of rooms in house
   int numrooms;
-  //number of ghosts in house
-  int numghosts;
+  //number of enemies in house
+  int numenemies;
 
   //list of rooms
   vector<Room> rooms;
-  //list of ghosts
-  vector<Player> ghosts;
+  //list of enemies
+  list<Player> enemies;
 
   // Adjust this value for your taste (to speed up, make bigger, to slow
   // down rotation, make smaller
@@ -152,6 +157,19 @@ void set_textures()
   glBindTexture(GL_TEXTURE_2D, textures[0]);
 }
 
+
+void update_title()
+{
+  int level = myPlayer->get_lev();
+  int next_lev = myPlayer->get_next_lev();
+  int rem_enem = enemies.size();
+
+  char *title;
+  sprintf(title, "Level: %d Experience to Next Level: %d Enemies Remaining: %d", level, next_lev, rem_enem);
+
+  glutSetWindowTitle(title);
+}
+
 void create_player()
 {
     //move player to the position of the eye
@@ -167,29 +185,29 @@ void create_player()
 
 //******************************************************************
 //                                                                  
-//  Function:   make_ghosts
+//  Function:   make_enemies
 //                                                                  
-//  Purpose:    initializes some ghosts within the house                                 
+//  Purpose:    initializes some enemies within the house                                 
 //                                                                  
-//  Parameters: myCube - cube to build the ghosts from
-//              offset - offset of room to put ghosts in
+//  Parameters: myCube - cube to build the enemies from
+//              offset - offset of room to put enemies in
 //                                                                  
 //
-// Pre Conditions: no ghosts
+// Pre Conditions: no enemies
 //
-// Post Conditions: ghosts
+// Post Conditions: enemies
 //                                                                  
 //******************************************************************
-void make_ghosts(Cube *myCube, vec3 offset)
+void make_enemies(Cube *myCube, vec3 offset)
 {
-  //produce a random number of ghosts between 0 and 10
-  numghosts = rand() % 10;
+  //produce a random number of enemies between 0 and 10
+  numenemies = (rand() % 10)+5;
 
-  //create ghosts
-  for(int i=0; i<numghosts; i++)
+  //create enemies
+  for(int i=0; i<numenemies; i++)
   {
-    float random1 = (2.0/(rand()%20))-1;
-    float random2 = (2.0/(rand()%20))-1;
+    float random1 = ((1.0/(rand()%20))-1)*(double)(i/2.0);
+    float random2 = ((1.0/(rand()%20))-1)*(double)(i/2.0);
 
     int level = (rand() % 3) + 1;
     Player *player = new Player(myCube, level);
@@ -200,59 +218,55 @@ void make_ghosts(Cube *myCube, vec3 offset)
       player->color(0.0, 1.0, 0.0);
     else if(level == 3)
       player->color(0.0, 0.0, 1.0);
-    ghosts.push_back(*player);
+    enemies.push_back(*player);
   }
 }
 
 //******************************************************************
 //                                                                  
-//  Function:   move_ghosts
+//  Function:   move_enemies
 //                                                                  
-//  Purpose:    move ghosts within house                                
+//  Purpose:    move enemies within house                                
 //                                                                  
 //  Parameters: n/a
 //                                                                  
 //
 // Pre Conditions: 
 //
-// Post Conditions: ghosts will move towards player
+// Post Conditions: enemies will move towards player
 //                                                                  
 //******************************************************************
-void move_ghosts()
+void move_enemies()
 {
   //used for hack of collision detection
-  vec3 noffset = rooms[numrooms-1].Get_Offset();
-  vec3 scale = vec3(1.0, 1.0, 1.0*numrooms);
   vec3 ploc = myPlayer->get_location();
-  GLfloat dist = 0.01;
+  GLfloat dist = 0.005;
 
   //move every ghost
-  for(int i=0; i<numghosts; i++)
+  for(list<Player>::iterator it=enemies.begin(); it != enemies.end(); it++)
   {
-    vec3 movement;
-    vec3 location = ghosts[i].get_location();
+    vec3 movement = vec3(0.0, 0.0, 0.0);
+    vec3 location = (*it).get_location();
     bool coll = false;
 
-    //quick collision hack, allow ghosts to walk through internal walls
-    if(location.x <= (noffset.x-scale.x) || location.x > (noffset.x+scale.x) || location.z < (noffset.z-scale.z) || location.z > (noffset.z+scale.z))
-      coll = true;
-
-      if(ploc.z > location.z)
-        movement.z = dist;
-      else
-        movement.z = -dist;
-
-    //no collision, continue with movement
-    if(!coll)
+    if(location.x < ploc.x)
     {
-      ghosts[i].trans(movement);
+      movement.x = dist;
     }
-    else //collision move somewhere else
+    else if(location.x > ploc.x)
     {
-      movement.x *= -1;
-      movement.z *= -1;
-      ghosts[i].trans(movement*-1);
+      movement.x = -dist;
     }
+    if(location.z < ploc.z)
+    {
+      movement.z = dist;
+    }
+    else if(location.z > ploc.z)
+    {
+      movement.z = -dist;
+    }
+
+    (*it).trans(movement);
   }
 }
 
@@ -335,10 +349,27 @@ void open_doors()
 //******************************************************************
 void move(vec3 location, vec3 movement)
 {
-  //list<Room>::iterator next = current_room;
+  float diroffset=0.0;
 
+  if(movement.x < 0)
+    diroffset = 90.0;
+  else if(movement.x > 0)
+    diroffset = -90.0;
 
-  //check for collisions before moving
+  if(movement.z > 0)
+    diroffset = 180.0;
+
+    float rotation = myPlayer->get_rotation().y;
+    rotation += diroffset;
+    float direction = rotation*DegreesToRadians;
+
+    float x = sin(direction);
+    float z = cos(direction);
+
+    movement.x = -SPEED*x;
+    movement.z = -SPEED*z;
+
+    cout << "direction = " << rotation << " movement = " << movement << endl;
 
     myPlayer->move_player(movement);
     skyBox->trans(movement);
@@ -346,8 +377,9 @@ void move(vec3 location, vec3 movement)
     myCamera->Move_At(movement);
 
 
-    for(vector<Player>::iterator it = ghosts.begin(); it != ghosts.end(); ++it)
+    for(list<Player>::iterator it = enemies.begin(); it != enemies.end(); ++it)
     {
+
       if((*it).Check_Collision(location, movement))
       {
         bool alive = myPlayer->take_damage(20);
@@ -381,9 +413,6 @@ void interact()
 {
   vec4 sight = myCamera->Get_At();
   vec4 player = myCamera->Get_Eye();
-
-  cout << "player =  " << sight << endl;
-  cout << "sight = " << sight*5 << endl;
 
   if(myFan->blade1->Check_Collision(vec3(player.x, player.y, player.z), vec3(sight.x*5, sight.y*5, sight.z*5)) || 
     myFan->blade2->Check_Collision(vec3(player.x, player.y, player.z), vec3(sight.x*5, sight.y*5, sight.z*5)))
@@ -498,8 +527,8 @@ void init()
   //create the rooms
   //create_rooms();
 
-  //make the ghosts
-  make_ghosts(myCube, vec3(0.0, 0.0, 0.0));
+  //make the enemies
+  make_enemies(myCube, vec3(0.0, 0.0, 0.0));
 
   myCube->Identity();
 
@@ -537,14 +566,11 @@ extern "C" void display()
   glUniform1i(glGetUniformLocation(program, "text"), 0);
   
 
-  //draw ghosts
-  for (vector<Player>::iterator it=ghosts.begin(); it != ghosts.end(); it++)
+  //draw enemies
+  for (list<Player>::iterator it=enemies.begin(); it != enemies.end(); it++)
   {
     (*it).draw();
   }
-
-  myFan->blade1->draw();
-  myFan->blade2->draw();
 
   //draw player
   myPlayer->color(0.0, 0.5, 0.5);
@@ -552,19 +578,77 @@ extern "C" void display()
   glutSwapBuffers();
 }
 
+bool sword_collision(Player enemy)
+{
+  vec3 elocation = enemy.get_location();
+  vec3 location = myPlayer->get_sword_loc();
+  vec3 rotation = myPlayer->get_rotation();
+  vec3 left, right;
+
+  left.y = location.y;
+  left.x = (sin(rotation.y*DegreesToRadians)+location.x-0.15);
+  left.z = location.z;
+  right.y = location.y;
+  right.x = (sin(rotation.y*DegreesToRadians)+location.x+0.15);
+  right.z = (-cos(rotation.y*DegreesToRadians)+location.z-0.65);
+
+  if((elocation.x <= right.x && elocation.x >= left.x) &&
+     (elocation.z >= right.z && elocation.z <= left.z))
+  {
+    cout << "returning true" << endl;
+    return true;
+  }
+
+  cout << "left = " << left << endl;
+  cout << "enemy = " << elocation << endl;
+  cout << "right = " << right << endl;
+
+}
+
 
 void attack()
 {
   myPlayer->swing_sword();
-  vec3 location = myPlayer->get_location();
-  vec4 movement = myCamera->Get_At();
-  for (vector<Player>::iterator it=ghosts.begin(); it != ghosts.end(); it++)
+  vec4 eye = myCamera->Get_Eye();
+  vec3 location = vec3(eye.x, eye.y/2.0, eye.z);
+  vec3 rotation = myPlayer->get_rotation();
+  vec3 movement;
+
+  movement.y = location.y;
+  movement.x = sin(rotation.y*DegreesToRadians)*-0.65;
+  movement.z = cos(rotation.y*DegreesToRadians)*-0.65;
+
+  cout << "movement = " << movement << endl;
+
+  list<Player>::iterator it=enemies.begin();
+  while(it != enemies.end())
   {
+    sword_collision((*it));
+
+    bool alive = true;
     if((*it).Check_Collision(location, vec3(movement.x, movement.y, movement.z)))
     {
-      bool alive = (*it).take_damage(500);
-      cout << "hit, health = " << (*it).get_health() << endl;
+      cout << myPlayer->get_attack() << endl;
+      alive = (*it).take_damage(myPlayer->get_attack());
+      if(!alive)
+      {
+        myPlayer->enemy_killed((*it).get_lev());
+        enemies.erase(it++);
+      }
+      else
+      {
+        it++;
+      }
     }
+    else
+    {
+      it++;
+    }
+  }
+
+  if(enemies.empty())
+  {
+    make_enemies(myCube, myPlayer->get_location());
   }
 }
 
@@ -622,22 +706,10 @@ extern "C" void idle()
   delta = new_time - lasttime;
   lasttime = new_time;
 
-  //move the ghosts constantly
-  //move_ghosts();
-  spin_fan();
+  myPlayer->level_up();
 
-  for(vector<Player>::iterator it = ghosts.begin(); it != ghosts.end(); ++it)
-  {
-    if((*it).get_health() <= 0)
-    {
-      ghosts.erase(it);
-    }
-  }
-
-  if(ghosts.empty())
-  {
-    make_ghosts(myCube, vec3(0.0, 0.0, 0.0));
-  }
+  update_title();
+  move_enemies();
 
   glutPostRedisplay();
 }
@@ -703,7 +775,8 @@ extern "C" void keyboard(unsigned char key, int x, int y)
    	break;
   case ' ':
     //reverse the camera TODO: not working
-    myCamera->Reverse();
+    enemies.clear();
+    make_enemies(myCube, location);
     break;
   case 'v':
     //change the color of the player, TODO: can't change back
@@ -834,8 +907,8 @@ extern "C" void reshape(int width, int height)
 //******************************************************************
 int main(int argc, char **argv)
 {
-  winw = 800.0;
-  winh = 800.0;
+  winw = 1200.0;
+  winh = 1200.0;
 
   numrooms = 6;
 
@@ -844,7 +917,7 @@ int main(int argc, char **argv)
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
   glutInitWindowSize(winw, winh);
-  glutCreateWindow("Color Cube");
+  glutCreateWindow("Game");
 
   glewInit();
 

@@ -160,7 +160,6 @@ void Camera::Move_Eye(vec4 neye)
 void Camera::Move_Eye(float nx, float ny, float nz)
 {
 	eye += vec4(nx, ny, nz, 0.0);
-	std::cout << "eye = " << eye << std::endl;
 }
 
 

@@ -13,6 +13,8 @@ class Sword: public Cube {
 
 		void sdraw();
 
+		int get_attack();
+
 	private:
 		void move_sword();
 

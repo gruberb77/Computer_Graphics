@@ -328,7 +328,6 @@ void Cube::rot(vec3 new_vec)
 void Cube::set_rot(vec3 new_vec)
 {
   rot_vec = new_vec;
-  std::cout << "rotation = " << rot_vec << std::endl;
   update_mv();
 }
 
@@ -441,6 +440,7 @@ void Cube::Identity()
 //******************************************************************
 bool Cube::Check_Collision(vec3 point, vec3 movement)
 {
+
 	//get positions of faces of each wall
 	GLfloat left = trans_vec.x - (scl_vec.x/2); //left side of cube
 	GLfloat right = trans_vec.x + (scl_vec.x/2); //right side of cube
@@ -450,9 +450,9 @@ bool Cube::Check_Collision(vec3 point, vec3 movement)
 	GLfloat top = trans_vec.y + (scl_vec.y/2); //top of cube
 
 	//check if the point is within the x, y or z planes of the cube
-	bool withinx = (point.x < right && point.x > left);
-	bool withiny = (point.y < top && point.y > bottom);
-	bool withinz = (point.z > back && point.z < front);
+	bool withinx = (point.x <= right && point.x >= left);
+	bool withiny = (point.y <= top && point.y >= bottom);
+	bool withinz = (point.z >= back && point.z <= front);
 
 	//within the xy plane of cube and point crosses one of the z planes after movement
 	if(withinx && withiny && ((point.z > front && (point.z + movement.z) < front) || (point.z < back && (point.z + movement.z) > back)))

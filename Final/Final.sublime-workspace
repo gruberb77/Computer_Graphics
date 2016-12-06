@@ -1,1 +1,861 @@
-{}
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"obj",
+				"objArray"
+			],
+			[
+				"take",
+				"take_damage"
+			],
+			[
+				"check",
+				"Check_Collision"
+			],
+			[
+				"che",
+				"Check_Collision"
+			],
+			[
+				"mov",
+				"move_sword"
+			],
+			[
+				"my",
+				"mySword"
+			],
+			[
+				"up",
+				"update_mv"
+			],
+			[
+				"move",
+				"Move_Eye"
+			],
+			[
+				"Move",
+				"Move_Eye"
+			],
+			[
+				"tex",
+				"textures"
+			],
+			[
+				"ntex",
+				"ntexcoords"
+			],
+			[
+				"GL_TE",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"terra",
+				"terrain_build"
+			],
+			[
+				"myC",
+				"myCube"
+			],
+			[
+				"seq",
+				"sequence"
+			],
+			[
+				"add",
+				"add_team"
+			],
+			[
+				"get",
+				"get_user"
+			],
+			[
+				"ret",
+				"returncoms"
+			],
+			[
+				"conve",
+				"convert_list"
+			],
+			[
+				"sys",
+				"system"
+			],
+			[
+				"remo",
+				"remove"
+			],
+			[
+				"FIF",
+				"FIFO_NAMES"
+			],
+			[
+				"MAX",
+				"MAX_FIFO"
+			],
+			[
+				"read",
+				"read_new_fifos"
+			],
+			[
+				"MA",
+				"MAX_BUF"
+			],
+			[
+				"reque",
+				"request_new_fifos"
+			],
+			[
+				"COM",
+				"COM_REQUEST_FIFOS"
+			],
+			[
+				"MY",
+				"MY_SERVER_OUT_FIFO"
+			],
+			[
+				"str",
+				"strerror"
+			],
+			[
+				"COM_SU",
+				"COM_SUCCESS_MORE_DATA"
+			],
+			[
+				"COM_TIME",
+				"COM_TIME_CONFLICT"
+			],
+			[
+				"COM_EVE",
+				"COM_EVENT_EXISTS"
+			],
+			[
+				"conv",
+				"convert_list"
+			],
+			[
+				"sear",
+				"search_events"
+			],
+			[
+				"push",
+				"push_back"
+			],
+			[
+				"ca",
+				"cal"
+			],
+			[
+				"std",
+				"stderr"
+			],
+			[
+				"if",
+				"ifile"
+			],
+			[
+				"M",
+				"MAX_BUF"
+			],
+			[
+				"O",
+				"O_WRONLY"
+			],
+			[
+				"write",
+				"write_to_file"
+			],
+			[
+				"MY_",
+				"MY_DATA_FILE"
+			],
+			[
+				"MY_SER",
+				"MY_SERVER_OUT_FIFO"
+			],
+			[
+				"print",
+				"print_com"
+			],
+			[
+				"COM_",
+				"COM_SUCCESS_MORE_DATA"
+			],
+			[
+				"res",
+				"response"
+			],
+			[
+				"resp",
+				"response"
+			],
+			[
+				"it",
+				"it"
+			],
+			[
+				"star",
+				"start_there"
+			],
+			[
+				"conver",
+				"convert_back"
+			],
+			[
+				"size",
+				"sizeof"
+			],
+			[
+				"prin",
+				"print_com"
+			],
+			[
+				"com",
+				"command"
+			],
+			[
+				"event",
+				"event_eq"
+			],
+			[
+				"remove",
+				"remove_event"
+			],
+			[
+				"pri",
+				"printf\tprintf …"
+			],
+			[
+				"new",
+				"newEvent"
+			],
+			[
+				"myE",
+				"myEvent"
+			],
+			[
+				"updat",
+				"update_event"
+			],
+			[
+				"remov",
+				"remove_event"
+			],
+			[
+				"writ",
+				"write_fifo"
+			],
+			[
+				"authentica",
+				"authenticating"
+			],
+			[
+				"re",
+				"redirect"
+			],
+			[
+				"fifo",
+				"fifo_name"
+			],
+			[
+				"fif",
+				"fifo_name"
+			],
+			[
+				"fi",
+				"fifo_name"
+			],
+			[
+				"spl",
+				"split_string"
+			],
+			[
+				"blade",
+				"blade1"
+			],
+			[
+				"trans",
+				"transform"
+			],
+			[
+				"num",
+				"numrooms"
+			],
+			[
+				"next",
+				"nextRoom"
+			],
+			[
+				"nex",
+				"nextRoom"
+			],
+			[
+				"camer",
+				"camera_view"
+			],
+			[
+				"make",
+				"make_ghosts"
+			],
+			[
+				"Ne",
+				"nextRoom"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "Skybox::MyQuad(this = 0xb61180,a = 1,b = 0,c = 3,d = 2,);\nSkybox::colorSkybox(this = 0xb61180,);\nSkybox::init_points(this = 0xb61180,);\nSkybox::Skybox(this = 0xb61180,nindex = 0,npoints = 0x6135a0 <points>,nnormals = 0x6137e0 <normals>,nmvLoc = 1,ncolLoc = 0,ntextures = 0x613be0 <textures>,);\ninit();\nmain(argc = 1,argv = 0x7fffffffe4f8,);\n",
+			"settings":
+			{
+				"buffer_size": 341,
+				"line_ending": "Unix",
+				"name": "GDB Callstack",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "001 -    stopped - Skybox::MyQuad(this = 0xb61180, a = 1, b = 0, c = 3, d = 2);\n",
+			"settings":
+			{
+				"buffer_size": 80,
+				"line_ending": "Unix",
+				"name": "GDB Threads",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "1 - /home/brent/Github/Computer_Graphics/Final/Skybox/skybox.cc:78\n",
+			"settings":
+			{
+				"buffer_size": 67,
+				"line_ending": "Unix",
+				"name": "GDB Breakpoints",
+				"read_only": true,
+				"scratch": true
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 272.0,
+		"last_filter": "sublimeGDB",
+		"selected_items":
+		[
+			[
+				"sublimeGDB",
+				"SublimeGDB: Open Breakpoint View"
+			],
+			[
+				"default ",
+				"Preferences: SublimeGDB Settings – Default"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 188.0,
+		"history":
+		[
+			"Install",
+			"import urllib2,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); os.makedirs( ipp ) if not os.path.exists(ipp) else None; urllib2.install_opener( urllib2.build_opener( urllib2.ProxyHandler()) ); by = urllib2.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); open( os.path.join( ipp, pf), 'wb' ).write(by) if dh == h else None; print('Error validating download (got %s instead of %s), please try manual install' % (dh, h) if dh != h else 'Please restart Sublime Text to finish installation') ",
+			"Install",
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
+			"Install"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/brent/Github/Computer_Graphics/Final",
+		"/home/brent/Github/Computer_Graphics/Final/Characters",
+		"/home/brent/Github/Computer_Graphics/Final/Cube",
+		"/home/brent/Github/Computer_Graphics/Final/Room",
+		"/home/brent/Github/Computer_Graphics/Final/Skybox",
+		"/home/brent/Github/Computer_Graphics/Final/examples",
+		"/home/brent/Github/Computer_Graphics/Final/shaders"
+	],
+	"file_history":
+	[
+		"/home/brent/Github/Computer_Graphics/Final/Final.sublime-project",
+		"/home/brent/Libraries/OS/Bounding/bounding_box.cc",
+		"/home/brent/Libraries/R_HW/HW3/cfit.R",
+		"/home/brent/Libraries/R_HW/HW2/PCA/PCA.R",
+		"/home/brent/Libraries/R_HW/HW2/HW/bar.R",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/views/workoutentry.pug",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/routes/index.js",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/views/admin_data_dump_a.pug",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/views/admin_data_dump_b.pug",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/routes/queries.js",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/views/admin_add_user.pug",
+		"/home/brent/Github/Computer_Graphics/Final/Skybox/skybox.h",
+		"/home/brent/Github/Computer_Graphics/Final/Skybox/skybox.cc",
+		"/home/brent/Github/Computer_Graphics/Final/Characters/player.cc",
+		"/home/brent/Github/Computer_Graphics/Final/house.cc",
+		"/home/brent/Github/Computer_Graphics/Final/Characters/sword.h",
+		"/home/brent/Github/Computer_Graphics/Final/Characters/sword.cc",
+		"/home/brent/Github/Computer_Graphics/Final/Camera/camera.cc",
+		"/home/brent/Github/Computer_Graphics/Final/Camera/camera.h",
+		"/home/brent/Graphics/Computer_Graphics/Final/Bitmap/bitmap.cc",
+		"/home/brent/Github/Computer_Graphics/Final/shaders/vshader72.glsl",
+		"/home/brent/Github/Computer_Graphics/Final/shaders/fshader72.glsl",
+		"/home/brent/Github/Computer_Graphics/Final/examples/texture3.cc",
+		"/home/brent/Github/Computer_Graphics/Final/Makefile",
+		"/home/brent/Github/Computer_Graphics/Final/Room/room.h",
+		"/home/brent/Github/Computer_Graphics/Final/Characters/player.h",
+		"/home/brent/Github/Computer_Graphics/Final/Room/room.cc",
+		"/home/brent/Github/Computer_Graphics/Final/Cube/cube.h",
+		"/home/brent/Github/Computer_Graphics/Final/Cube/cube.cc",
+		"/build/glibc-GKVZIf/glibc-2.23/sysdeps/unix/sysv/linux/raise.c",
+		"/home/brent/Graphics/Computer_Graphics/Final/house.cc",
+		"/home/brent/Graphics/Computer_Graphics/Final/cube.h",
+		"/home/brent/Graphics/Computer_Graphics/Final/cube.cc",
+		"/home/brent/Graphics/Computer_Graphics/Final/camera.h",
+		"/home/brent/Graphics/Computer_Graphics/Final/camera.cc",
+		"/home/brent/Graphics/Computer_Graphics/Final/fshader72.glsl",
+		"/home/brent/Graphics/Computer_Graphics/Final/vshader41.glsl",
+		"/home/brent/Graphics/Computer_Graphics/Final/vshader72.glsl",
+		"/home/brent/.config/sublime-text-3/Packages/User/SublimeGDB.sublime-settings",
+		"/home/brent/.config/sublime-text-3/Packages/SublimeGDB/SublimeGDB.sublime-settings",
+		"/home/brent/Libraries/New repo/2/OhioUniversityWXCPerformanceProgram/views/myworkouts.pug",
+		"/home/brent/Libraries/R_HW/temp.R",
+		"/home/brent/Libraries/R_HW/HW2/example/TC.R",
+		"/home/brent/Desktop/database/insert.pl",
+		"/home/brent/Libraries/R_HW/graph.R",
+		"/home/brent/Desktop/database/get_gene_biomart.pl",
+		"/home/brent/Libraries/R_HW/HW1/temp.R",
+		"/home/brent/Libraries/R_HW/HW2/bar.R",
+		"/home/brent/Desktop/node.js_pract/practice_proj/queries.js",
+		"/home/brent/Desktop/testing_fork/Concurrent/server.cc",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/Iterative/IterServer.cc",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/Concurrent_test/calendar.cc",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/cs4420_project1/ConcTests.sh",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/test/ConcTests.sh",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/test/IterTests.sh",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/cs4420_project1/IterTests.sh",
+		"/home/brent/Desktop/testing_fork/Concurrent/calendar.cc",
+		"/run/user/1000/gvfs/sftp:host=p2.cs.ohiou.edu,user=bgruber/home/bgruber/senior/OS/Prog1_fin/Concurrent_test/calendar.h",
+		"/home/brent/Desktop/testing_fork/client.c",
+		"/home/brent/Desktop/testing_fork/server.cc",
+		"/home/brent/Desktop/OS/My Homework/try2/iterative/server.cc",
+		"/home/brent/Desktop/OS/My Homework/try2/iterative/client.c",
+		"/home/brent/Desktop/OS/My Homework/try2/concurrent/server.cc",
+		"/home/brent/Desktop/OS/My Homework/try2/concurrent/client.c",
+		"/home/brent/Desktop/OS/My Homework/try2/server.cc",
+		"/home/brent/Desktop/OS/My Homework/try2/client.c",
+		"/home/brent/Desktop/OS/My Homework/Event.h",
+		"/home/brent/Desktop/OS/My Homework/server.c",
+		"/home/brent/Desktop/OS/My Homework/client.c",
+		"/home/brent/Desktop/node.js_pract/queries.js",
+		"/home/brent/Desktop/node.js_pract/server.js",
+		"/home/brent/Libraries/New repo/OhioUniversityWXCPerformanceProgram/server.js",
+		"/home/brent/Graphics/Computer_Graphics/working/camera.cc",
+		"/home/brent/Graphics/Computer_Graphics/working/cube.cc",
+		"/home/brent/Graphics/Computer_Graphics/working/room.cc",
+		"/home/brent/Graphics/Computer_Graphics/working/room.h",
+		"/home/brent/Graphics/Computer_Graphics/working/cube.h",
+		"/home/brent/Graphics/Computer_Graphics/working/camera.h",
+		"/home/brent/Graphics/Computer_Graphics/working/house.cc",
+		"/home/brent/Graphics/Computer_Graphics/HW3/functions.h",
+		"/home/brent/Graphics/Computer_Graphics/HW3/functions.cc",
+		"/home/brent/Desktop/graphics/HW1/Football.cc",
+		"/home/brent/Libraries/OhioUniversityWXCPerformanceProgram/site.htm"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 102.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"post",
+			"dump(",
+			"/getdatadumpind",
+			"admin_add_user",
+			"rot",
+			"move_at",
+			"Player",
+			"ghosts.eras",
+			"make",
+			"keyb",
+			"ghosts[",
+			"numghosts",
+			"move_ghosts",
+			"numghosts",
+			"display",
+			"myCamera",
+			"take_dam",
+			"new Play",
+			"take_d",
+			"take",
+			"make_ghosts",
+			"ghosts",
+			"move(",
+			"make_g",
+			"rooms",
+			"create_room",
+			"speed",
+			"get_rot",
+			"myPlayer",
+			"sword",
+			"rot",
+			"change",
+			"color(",
+			"make_ghos",
+			"display()",
+			"thirdp",
+			"mouse",
+			"display",
+			"room",
+			"init()",
+			"create_p",
+			"move_eye",
+			"myCamera",
+			"transform",
+			"myquad",
+			"transform",
+			"update_mv",
+			"create_player",
+			"skybox",
+			"transform",
+			"myCamera",
+			"create_pl",
+			"myPlayer",
+			"cout",
+			"move(",
+			"myPlayer",
+			"skybox",
+			"zfar",
+			"skybox",
+			"TOT_TE",
+			"znear",
+			"skybox",
+			"set_textures",
+			"skybox",
+			"display()",
+			"move_ghosts",
+			"move(",
+			"draw",
+			"tex_coords",
+			"buffer",
+			"display()",
+			"move(",
+			"draw",
+			"tex_coords",
+			"vtexcoord",
+			"tex_coord",
+			"tex",
+			"glbind",
+			"tex_coords",
+			"normals",
+			"tex_co",
+			"tex_",
+			"myquad",
+			"vtexcoor",
+			"tex_coords",
+			"vec2",
+			"skybox",
+			"normals",
+			"normal",
+			"vtexcoord",
+			"vtex",
+			"draw",
+			"normals",
+			"init",
+			"vertex",
+			"new Cube",
+			"init",
+			"client",
+			"send_nu",
+			"event_eq",
+			"cout ",
+			"reply",
+			"read_ne",
+			"mkfifo",
+			"makefifo",
+			"mkfifo",
+			"read_ne",
+			"request_n",
+			"read_n",
+			"reque",
+			"requ",
+			"read_in",
+			"reading",
+			"fprintf",
+			"printf",
+			"printf(",
+			"write",
+			"could not close",
+			"could not open file",
+			"write",
+			"remove",
+			"cout",
+			"printf",
+			"print_res",
+			"listen",
+			"respons",
+			"get_even",
+			"menu"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"tex_coords",
+			"ConcClient",
+			"IterClient",
+			"ConcClient",
+			"IterClient",
+			"cal"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 341,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								241,
+								241
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 80,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								80,
+								80
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 67,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								67,
+								67
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				3,
+				1
+			],
+			[
+				0,
+				1,
+				1,
+				2
+			],
+			[
+				1,
+				1,
+				2,
+				2
+			],
+			[
+				2,
+				1,
+				3,
+				2
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.33,
+			0.66,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			0.75,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Final.sublime-project",
+	"replace":
+	{
+		"height": 74.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 289.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
