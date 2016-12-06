@@ -20,6 +20,8 @@
 # c++ source file.  So if xxxx.cc is the sourcefile, you type make
 # xxxx to produce the binary file.
 
+IRRKLANG = ./irrklang/bin/libIrrKlang.so -pthread
+
 # last-modified: Fri Oct 16 13:01:06 2015
 
 # Assumes the following file exists in the proper place.
@@ -31,7 +33,7 @@ all: house clean
 
 #make the program
 house: house.cc cube.o room.o camera.o bitmap.o skybox.o player.o sword.o
-	$(CC) house.cc  $(InitShader) cube.o room.o camera.o bitmap.o skybox.o player.o sword.o $(OPTIONS) $(LDLIBS) -o house
+	$(CC) house.cc  $(InitShader) cube.o room.o camera.o bitmap.o skybox.o player.o sword.o $(OPTIONS) $(IRRKLANG) $(LDLIBS) -o house
 
 # Auxilliary file for rooms.
 room.o: ./Room/room.h ./Room/room.cc cube.o

@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#define NEXT_LEVEL 1000
+#define NEXT_LEVEL 500
 #define KILL_EXP 50
 
 

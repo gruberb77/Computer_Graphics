@@ -19,7 +19,9 @@
 #include "./Bitmap/bitmap.h"
 #include "./Skybox/skybox.h"
 #include "./Characters/player.h"
+#include "./irrklang/include/irrKlang.h"
 #include <vector>
+#include <pthread.h>
 #include <time.h>
 #include <string>
 #include <fstream>
@@ -41,6 +43,8 @@ using std::list;
   #define SPEED 0.25
   BITMAPINFO *TexInfo[NUM_TEXTURES]; //texture bitmatp information
   GLubyte	 *TexBits[NUM_TEXTURES];
+
+  irrklang::ISoundEngine* engine;
 
 
   typedef Angel::vec4  color4;
@@ -179,7 +183,7 @@ void create_player()
   myPlayer->transform(vec3(0.0 , 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
   myPlayer->move_player(vec3(eye.x, 0.25, eye.z+0.25));
   myPlayer->color(0.0, 1.0, 0.0);
-  skyBox->set_pos(vec3(0.0, 7.5, 0.0));
+  skyBox->set_pos(vec3(0.0, 0.0, 0.0));
 }
 
 
@@ -201,7 +205,7 @@ void create_player()
 void make_enemies(Cube *myCube, vec3 offset)
 {
   //produce a random number of enemies between 0 and 10
-  numenemies = (rand() % 10)+5;
+  numenemies = (rand() % 10)+(myPlayer->get_lev() * 2);
 
   //create enemies
   for(int i=0; i<numenemies; i++)
@@ -209,14 +213,14 @@ void make_enemies(Cube *myCube, vec3 offset)
     float random1 = ((1.0/(rand()%20))-1)*(double)(i/2.0);
     float random2 = ((1.0/(rand()%20))-1)*(double)(i/2.0);
 
-    int level = (rand() % 3) + 1;
+    int level = (rand() % 3) + myPlayer->get_lev();
     Player *player = new Player(myCube, level);
     player->transform(vec3(random1, 0.25, random2 + offset.z), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
-    if(level == 1)
+    if(level%3 == 1)
       player->color(1.0, 0.0, 0.0);
-    else if(level == 2)
+    else if(level%3 == 2)
       player->color(0.0, 1.0, 0.0);
-    else if(level == 3)
+    else if(level%3 == 3)
       player->color(0.0, 0.0, 1.0);
     enemies.push_back(*player);
   }
@@ -254,26 +258,34 @@ void move_enemies()
     if((ploc.x - location.x) < 0.25 && (ploc.x - location.z) < 0.25)
     {
 
-    if(location.x <= ploc.x)
+    if(location.x < ploc.x-0.075)
     {
       movement.x = dist;
     }
-    else if(location.x >= ploc.x)
+    else if(location.x > ploc.x+0.075)
     {
       movement.x = -dist;
     }
-    if(location.z <= ploc.z)
+    else
+    {
+      movement.x = 0;
+    }
+    if(location.z < ploc.z-0.075)
     {
       movement.z = dist;
     }
-    else if(location.z >= ploc.z)
+    else if(location.z > ploc.z+0.075)
     {
       movement.z = -dist;
+    }
+    else
+    {
+      movement.z = 0;
     }
 
       if(myPlayer->Check_Collision(location, movement))
       {
-        bool alive = myPlayer->take_damage(20);
+        bool alive = myPlayer->take_damage((*it).get_lev()*20);
         cout << "Health = " << myPlayer->get_health() << endl;
         if(!alive)
         {
@@ -281,7 +293,7 @@ void move_enemies()
           create_player();
         }
 
-        movement *= -250;
+        movement *= -150;
       }
     }
 
@@ -460,7 +472,7 @@ void init()
   myCamera = new Camera(CameraView);
   myCube = new Cube(0, points, normals, ModelView, vColor);
   skyBox= new Skybox(0, points, tex_coords, ModelView, vColor, textures);
-  skyBox->transform(vec3(0.0, 7.5, 0.0), vec3(0.0, 0.0, 0.0), vec3(15.0, 15.0, 15.0));
+  skyBox->transform(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(7.5, 7.5, 7.5));
 
   create_player();
 
@@ -551,31 +563,13 @@ extern "C" void display()
   glutSwapBuffers();
 }
 
-bool sword_collision(Player enemy)
+void *playVictory(void *arg1)
 {
-  vec3 elocation = enemy.get_location();
-  vec3 location = myPlayer->get_sword_loc();
-  vec3 rotation = myPlayer->get_rotation();
-  vec3 left, right;
-
-  left.y = location.y;
-  left.x = (sin(rotation.y*DegreesToRadians)+location.x-0.15);
-  left.z = location.z;
-  right.y = location.y;
-  right.x = (sin(rotation.y*DegreesToRadians)+location.x+0.15);
-  right.z = (-cos(rotation.y*DegreesToRadians)+location.z-0.65);
-
-  if((elocation.x <= right.x && elocation.x >= left.x) &&
-     (elocation.z >= right.z && elocation.z <= left.z))
-  {
-    cout << "returning true" << endl;
-    return true;
-  }
-
-  cout << "left = " << left << endl;
-  cout << "enemy = " << elocation << endl;
-  cout << "right = " << right << endl;
-
+        engine->stopAllSounds();
+        engine->play2D("./irrklang/media/victory.mp3", false);
+        while(engine->isCurrentlyPlaying("./irrklang/media/victory.mp3"));
+        engine->play2D("./irrklang/media/DarkKnight.ogg", true);
+        return NULL;
 }
 
 
@@ -605,6 +599,7 @@ void attack()
       {
         myPlayer->enemy_killed((*it).get_lev());
         enemies.erase(it++);
+
       }
       else
       {
@@ -677,10 +672,18 @@ extern "C" void idle()
   delta = new_time - lasttime;
   lasttime = new_time;
 
-  myPlayer->level_up();
+  int oldlevel = myPlayer->get_lev();
+  int newlevel = myPlayer->level_up();
 
   update_title();
   move_enemies();
+
+  if(newlevel > oldlevel)
+  {
+        pthread_t sound;
+        int x;
+        pthread_create(&sound, NULL, playVictory, &x);
+  }
 
   glutPostRedisplay();
 }
@@ -881,7 +884,18 @@ int main(int argc, char **argv)
   winw = 1200.0;
   winh = 1200.0;
 
-  numrooms = 6;
+  // start the sound engine with default parameters
+  engine = irrklang::createIrrKlangDevice();
+
+  if (!engine)
+  {
+    printf("Could not startup engine\n");
+    return 0; // error starting up the engine
+  }
+
+    // play some sound stream, looped
+  engine->play2D("./irrklang/media/DarkKnight.ogg", true);
+
 
   srand(time(NULL));
 
