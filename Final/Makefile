@@ -29,11 +29,11 @@ include ../Makefile.txt
 
 # The first item in the file is what will be made if you just type
 # make (i.e. with no arguments).
-all: house clean
+all: Final clean
 
 #make the program
-house: house.cc cube.o room.o camera.o bitmap.o skybox.o player.o sword.o
-	$(CC) house.cc  $(InitShader) cube.o room.o camera.o bitmap.o skybox.o player.o sword.o $(OPTIONS) $(IRRKLANG) $(LDLIBS) -o house
+Final: Final.cc cube.o room.o camera.o bitmap.o skybox.o player.o sword.o
+	$(CC) Final.cc  $(InitShader) cube.o room.o camera.o bitmap.o skybox.o player.o sword.o $(OPTIONS) $(IRRKLANG) $(LDLIBS) -o Final
 
 # Auxilliary file for rooms.
 room.o: ./Room/room.h ./Room/room.cc cube.o
@@ -63,4 +63,4 @@ sword.o: ./Characters/sword.h ./Characters/sword.cc
 
 # pattern to clean the directory
 clean: 
-	rm -f *.o
+	rm -f -r *.o

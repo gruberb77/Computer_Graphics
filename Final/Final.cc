@@ -1,16 +1,17 @@
 //******************************************************************* 
 //                                                                    
-//  File:        House                                           
+//  File:        Final                                           
 //                                                                     
 //  Author:      Brent Gruber
 //  Email:       bg240711@ohio.edu
+//  Class:       CS 4250 - Final Project
 //                                                                    
 //
 //                                                                    
-//  Description: This is the implementation of a (haunted) house, with some interaction and glut 
-//               callbacks                
+//  Description: This is the implementation of my final project, it is a simple 3d game that
+//                will allow the user to move around the world and fight enemies by swinging a sword               
 //                                                                    
-//  Date:        11/1/2016
+//  Date:        12/6/2016
 //                                                                    
 //*******************************************************************
 
@@ -37,26 +38,23 @@ using std::list;
 
   const int NumVertices = 36;
 
+  //global vars
   #define NUM_TEXTURES 7
   #define TOT_TEXTURES 7
   #define M_PI  3.14159265358979323846
   #define SPEED 0.25
+
+  //arrays to hold texture info
   BITMAPINFO *TexInfo[NUM_TEXTURES]; //texture bitmatp information
   GLubyte	 *TexBits[NUM_TEXTURES];
 
+  //irrklang library for playing sound
   irrklang::ISoundEngine* engine;
 
 
   typedef Angel::vec4  color4;
   typedef Angel::vec4  point4;
 
-  //ceiling fan
-  struct Fan
-  {
-    Cube    *blade1;
-    Cube    *blade2;
-    bool    spin;
-  };
 
   //points array used as VAO
   point4 points[NumVertices];
@@ -71,7 +69,7 @@ using std::list;
   GLubyte image[TextureSize][TextureSize][3];
   GLubyte image2[TextureSize][TextureSize][3];
 
-  	// Size of input heightmap
+  // Size of input heightmap
 	size_t Width;
 	size_t Height;
 
@@ -111,11 +109,24 @@ using std::list;
   Skybox   *skyBox;
   Room	   *myRoom;
   Camera   *myCamera;
-  Fan      *myFan;
 
   //list<Room>::iterator current_room;
   int current;
 
+//******************************************************************
+//                                                                  
+//  Function:   load_texture
+//                                                                  
+//  Purpose:    move enemies within house                                
+//                                                                  
+//  Parameters: n/a
+//                                                                  
+//
+// Pre Conditions: 
+//
+// Post Conditions: reads an image file and creates a texture from it
+//                                                                  
+//******************************************************************
 void load_texture(int index, string filename)
 {
   // Set which texture subsequent commands will apply to.
@@ -140,7 +151,20 @@ void load_texture(int index, string filename)
 
 }
 
-
+//******************************************************************
+//                                                                  
+//  Function:   set_textures
+//                                                                  
+//  Purpose:    generates a list of textures                              
+//                                                                  
+//  Parameters: n/a
+//                                                                  
+//
+// Pre Conditions: the files used by this function exist
+//
+// Post Conditions: textures will be loaded and usable
+//                                                                  
+//******************************************************************
 void set_textures()
 {
   string folder = "./textures/skycube_tga/";
@@ -161,7 +185,21 @@ void set_textures()
   glBindTexture(GL_TEXTURE_2D, textures[0]);
 }
 
-
+//******************************************************************
+//                                                                  
+//  Function:   update_title
+//                                                                  
+//  Purpose:    update the title of the window to inform the user of the current
+//              state of the game                              
+//                                                                  
+//  Parameters: n/a
+//                                                                  
+//
+// Pre Conditions: 
+//
+// Post Conditions: title will show information about game
+//                                                                  
+//******************************************************************
 void update_title()
 {
   int level = myPlayer->get_lev();
@@ -174,6 +212,23 @@ void update_title()
   glutSetWindowTitle(title);
 }
 
+
+//******************************************************************
+//                                                                  
+//  Function:   create_player
+//                                                                  
+//  Purpose:    create the user player and move all the connected aspects
+//              to the player's location                                
+//                                                                  
+//  Parameters: n/a
+//                                                                  
+//
+// Pre Conditions: 
+//
+// Post Conditions: Player will be created and skybox and camera will be set based on
+//                  the location
+//                                                                  
+//******************************************************************
 void create_player()
 {
     //move player to the position of the eye
@@ -183,7 +238,7 @@ void create_player()
   myPlayer->transform(vec3(0.0 , 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(0.15, 0.3, 0.15));
   myPlayer->move_player(vec3(eye.x, 0.25, eye.z+0.25));
   myPlayer->color(0.0, 1.0, 0.0);
-  skyBox->set_pos(vec3(0.0, 0.0, 0.0));
+  skyBox->set_pos(vec3(0.0, 0.0, 1.125));
 }
 
 
@@ -409,32 +464,6 @@ void move(vec3 location, vec3 movement)
 
 }
 
-//******************************************************************
-//                                                                  
-//  Function:   interact
-//                                                                  
-//  Purpose:    interact with the world                             
-//                                                                  
-//  Parameters: 
-//                                                                  
-//
-// Pre Conditions: player has attempted to interact with something
-//
-// Post Conditions: if possible interaction found, execute it
-//                                                                  
-//******************************************************************
-void interact()
-{
-  vec4 sight = myCamera->Get_At();
-  vec4 player = myCamera->Get_Eye();
-
-  if(myFan->blade1->Check_Collision(vec3(player.x, player.y, player.z), vec3(sight.x*5, sight.y*5, sight.z*5)) || 
-    myFan->blade2->Check_Collision(vec3(player.x, player.y, player.z), vec3(sight.x*5, sight.y*5, sight.z*5)))
-  {
-    myFan->spin = !myFan->spin;
-  }
-}
-
 
 
 //******************************************************************
@@ -472,7 +501,7 @@ void init()
   myCamera = new Camera(CameraView);
   myCube = new Cube(0, points, normals, ModelView, vColor);
   skyBox= new Skybox(0, points, tex_coords, ModelView, vColor, textures);
-  skyBox->transform(vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0), vec3(7.5, 7.5, 7.5));
+  skyBox->transform(vec3(0.0, 0.0, 3.25), vec3(0.0, 0.0, 0.0), vec3(7.5, 7.5, 7.5));
 
   create_player();
 
@@ -516,13 +545,6 @@ void init()
   make_enemies(myCube, vec3(0.0, 0.0, 0.0));
 
   myCube->Identity();
-
-  myFan = new Fan();
-  myFan->blade1 = new Cube(*myCube);
-  myFan->blade1->transform(vec3(0.0, 1.9, -2.0), vec3(0.0, 0.0, 0.0), vec3(0.1, 0.1, 0.5));
-
-  myFan->blade2 = new Cube(*myCube);
-  myFan->blade2->transform(vec3(0.0, 1.9, -2.0), vec3(0.0, 0.0, 0.0), vec3(0.5, 0.1, 0.1));
 }
 
 //******************************************************************
@@ -563,6 +585,20 @@ extern "C" void display()
   glutSwapBuffers();
 }
 
+//******************************************************************
+//                                                                  
+//  Function:   playVictor
+//                                                                  
+//  Purpose:    play a sound file upon leveling up                                
+//                                                                  
+//  Parameters: n/a
+//                                                                  
+//
+// Pre Conditions: 
+//
+// Post Conditions: level up sound is played then the default background music is restarted
+//                                                                  
+//******************************************************************
 void *playVictory(void *arg1)
 {
         engine->stopAllSounds();
@@ -572,7 +608,20 @@ void *playVictory(void *arg1)
         return NULL;
 }
 
-
+//******************************************************************
+//                                                                  
+//  Function:   attack
+//                                                                  
+//  Purpose:    allow the user to swing the sword and attack enemies                               
+//                                                                  
+//  Parameters: n/a
+//                                                                  
+//
+// Pre Conditions: 
+//
+// Post Conditions: if enemy is within range they will take damage
+//                                                                  
+//******************************************************************
 void attack()
 {
   myPlayer->swing_sword();
@@ -637,7 +686,7 @@ extern "C" void mouse(int button, int state, int x, int y)
   if (state == GLUT_DOWN) {
     switch(button) {
     case GLUT_LEFT_BUTTON:  
-      //open door in front of player
+      //attack an enemy
       attack();
 			break;
     case GLUT_MIDDLE_BUTTON:  
@@ -672,12 +721,17 @@ extern "C" void idle()
   delta = new_time - lasttime;
   lasttime = new_time;
 
+  //see if user leveled up
   int oldlevel = myPlayer->get_lev();
   int newlevel = myPlayer->level_up();
 
+  //update the title of the screen
   update_title();
+  //move the enemies
   move_enemies();
 
+  //if the user has leveled up then play the level up sound
+  //used pthread so that execution isn't halted while waiting for sound to finish
   if(newlevel > oldlevel)
   {
         pthread_t sound;
@@ -735,20 +789,8 @@ extern "C" void keyboard(unsigned char key, int x, int y)
     movement.x = dist;
     location.x += 0.075;
     break;
-   case '1':
-   	glBindTexture(GL_TEXTURE_2D, textures[0]);
-   	break;
-   case '2':
-   	glBindTexture(GL_TEXTURE_2D, textures[1]);
-   	break;
-   case '3':
-   	glBindTexture(GL_TEXTURE_2D, textures[2]);
-   	break;
-   case '4':
-   	glBindTexture(GL_TEXTURE_2D, textures[3]);
-   	break;
   case ' ':
-    //reverse the camera TODO: not working
+    //delete all current enemies and regenerate
     enemies.clear();
     make_enemies(myCube, location);
     break;
@@ -832,6 +874,7 @@ extern "C" void passivemotion(int x, int y)
 
   //update the at vector
   myCamera->Move_At(theta, phi);
+  //rotate the player with the camera
   myPlayer->rotate_player(angle * dx);
 
   glutPostRedisplay();
